@@ -34,3 +34,9 @@ jobs:
         directory: ${{ github.workspace }}/main
         Compile:  'true'
         Pack:     'true'
+    - name: diag
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+       apt update && apt install tree --yes
+       tree
