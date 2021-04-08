@@ -16,7 +16,7 @@ namespace CloudTek.BuildSystem
         readonly Artifact finalArtifactWithTests;
         protected SmartBuild(Module[] modules)
         {
-            System.Diagnostics.Debugger.Launch(); // Uncomment to debug a build
+            // System.Diagnostics.Debugger.Launch(); // Uncomment to debug a build
             Modules = modules;
 
             var modulesWithExistingTests = Modules
@@ -69,7 +69,7 @@ namespace CloudTek.BuildSystem
                         Logger.Trace($"Restoring {artifact.Name}");
                         DotNetRestore(s => s
                           .SetProjectFile((RootDirectory /
-                                           $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj")));
+                            $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj")));
                     });
 
                 });
