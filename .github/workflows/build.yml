@@ -3,10 +3,6 @@ name: build build-system
 env:
   NETCORE_VERSION: 5.0.101
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_MULTILEVEL_LOOKUP: 0
-  DOTNET_ROLL_FORWARD: "Major"
 
 on:
   push:
@@ -14,6 +10,7 @@ on:
     - main
     paths:
       - ".github/workflows/build.yml"
+      - "build/*"
       - "build-system/*"
   workflow_dispatch:
     inputs: {}
