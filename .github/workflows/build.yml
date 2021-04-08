@@ -23,8 +23,8 @@ jobs:
     # note: actions/checkout@v2 uses shallow cloning, gitver requires full clone
     - name: Checkout build-system
       uses: actions/checkout@v1
-      with:
-        path: main
+      # with:
+      #   path: main
     - uses: actions/setup-dotnet@v1
       name: dotnet installer
       with:
@@ -33,7 +33,7 @@ jobs:
       uses: cloud-tek/actions/build-system@v0.5
       name: nuke
       with:
-        directory: ${{ github.workspace }}/main
+        directory: ${{ github.workspace }}
         Compile:  'true'
         Pack:     'true'
     - name: diag
