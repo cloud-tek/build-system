@@ -2,7 +2,9 @@
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
+using Nuke.Common.Git;
 using System.Linq;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -44,7 +46,7 @@ namespace CloudTek.BuildSystem
 
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
-        //[GitVersion] public GitVersion GitVersion { get; set; }
+        [GitVersion] public GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
         protected AbsolutePath TestResultsDirectory => RootDirectory / "tests/results";
@@ -91,9 +93,9 @@ namespace CloudTek.BuildSystem
                         DotNetBuild(s => s
                           .SetProjectFile(path)
                           .SetConfiguration(Configuration)
-                          .SetVersion(string.IsNullOrEmpty(BuildNumber) ? Version : $"{Version}.{BuildNumber}")
-                          // .SetFileVersion(GitVersion.GetNormalizedFileVersion())
-                          // .SetAssemblyVersion(GitVersion.AssemblySemVer))
+                          .SetVersion(GitVersion.NuGetVersionV2)
+                          .SetFileVersion(GitVersion.AssemblySemFileVer)
+                          .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .EnableNoRestore());
                     });
                 });
@@ -113,8 +115,9 @@ namespace CloudTek.BuildSystem
                         DotNetPack(s => s
                           .SetProject(path)
                           .SetConfiguration(Configuration)
-                          //.SetVersion(GitVersion.NuGetVersionV2)
-                          .SetVersion(string.IsNullOrEmpty(BuildNumber) ? Version : $"{Version}.{BuildNumber}")
+                          .SetVersion(GitVersion.NuGetVersionV2)
+                          .SetFileVersion(GitVersion.AssemblySemFileVer)
+                          .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutputDirectory(ArtifactsDirectory / artifact.Name)
                           .EnableNoBuild());
                     });
@@ -136,7 +139,9 @@ namespace CloudTek.BuildSystem
                         DotNetPublish(s => s
                           .SetProject(path)
                           .SetConfiguration(Configuration)
-                          .SetVersion(string.IsNullOrEmpty(BuildNumber) ? Version : $"{Version}.{BuildNumber}")
+                          .SetVersion(GitVersion.NuGetVersionV2)
+                          .SetFileVersion(GitVersion.AssemblySemFileVer)
+                          .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutput(ArtifactsDirectory / artifact.Name)
                           .EnableNoBuild());
                     });
