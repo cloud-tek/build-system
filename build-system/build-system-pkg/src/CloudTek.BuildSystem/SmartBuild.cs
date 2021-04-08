@@ -13,12 +13,10 @@ namespace CloudTek.BuildSystem
     public abstract class SmartBuild : NukeBuild
     {
         readonly Module[] Modules;
-        readonly string Version;
         readonly Artifact finalArtifactWithTests;
-        protected SmartBuild(Module[] modules, string version)
+        protected SmartBuild(Module[] modules)
         {
-            // Debugger.Launch(); // Uncomment to debug a build
-            Version = version;
+            System.Diagnostics.Debugger.Launch(); // Uncomment to debug a build
             Modules = modules;
 
             var modulesWithExistingTests = Modules
@@ -45,7 +43,7 @@ namespace CloudTek.BuildSystem
 
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
-        [GitVersion] public GitVersion GitVersion { get; set; }
+        public abstract GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
         protected AbsolutePath TestResultsDirectory => RootDirectory / "tests/results";

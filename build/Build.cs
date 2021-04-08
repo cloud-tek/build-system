@@ -1,10 +1,12 @@
 using CloudTek.BuildSystem;
 using Nuke.Common.Execution;
+using Nuke.Common.Tools.GitVersion;
+using System.ComponentModel.DataAnnotations;
 
 [CheckBuildProjectConfigurations]
 public class Build : SmartBuild
 {
-    public Build() : base(Modules, "1.0")
+    public Build() : base(Modules)
     {
 
     }
@@ -23,4 +25,7 @@ public class Build : SmartBuild
             }
         }
     };
+
+[GitVersion(Framework = "net5.0", NoFetch = true)]
+[Required] public override GitVersion GitVersion { get; set; }
 }
