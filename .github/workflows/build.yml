@@ -32,12 +32,15 @@ jobs:
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
     - id: nuke
-      uses: cloud-tek/actions/build-system@v0.5
+      uses: cloud-tek/actions/build-system@v0.6
       name: nuke
       with:
         directory: ${{ github.workspace }}
-        Compile:  'true'
-        Pack:     'true'
+        Compile:      'true'
+        Pack:         'true'
+        Push:         'true'
+        NuGetApiUrl:  'nuget.pkg.github.com'
+        NuGetApiKey:  '${{ secrets.GH_PAT }}'
     - name: diag
       shell: bash
       working-directory: ${{ github.workspace }}
