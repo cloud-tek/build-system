@@ -32,5 +32,5 @@ jobs:
       name: nuke
       with:
         directory: ${{ github.workspace }}/main
-        Compile: 'true'
-        UnitTests: 'true'
+        Compile:  'true'
+        Pack:     'true'
