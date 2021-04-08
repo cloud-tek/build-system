@@ -27,9 +27,10 @@ jobs:
       name: dotnet installer
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-    - run: dotnet tool restore
-      name: dotnet tool restore
-      working-directory: ./main
-    - run: dotnet nuke Compile
-      name: dotnet nuke Compile
-      working-directory: ./main
+    - id: nuke
+      uses: cloud-tek/actions/nuke@v0
+      name: nuke
+      with:
+        directory: ${{ github.workspace }}/main
+        Compile: 'true'
+        UnitTests: 'true'
