@@ -8,6 +8,8 @@ on:
   push:
     branches:
     - main
+    - feature/*
+    - release/*
     paths:
       - ".github/workflows/build.yml"
       - "build/*"
