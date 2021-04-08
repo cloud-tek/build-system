@@ -13,18 +13,6 @@ on:
       - "build-system/*"
   workflow_dispatch:
     inputs: {}
-      # subscription:
-      #   description: 'Azure subscription'
-      #   required: false
-      #   default: 'reset-obywatelski'
-      # environment:
-      #   description: 'Environment'
-      #   required: true
-      #   default: 'dev'
-      # location:
-      #   description: 'Azure region'
-      #   required: false
-      #   default: 'germanywestcentral'
 
 jobs:
   build:
@@ -39,20 +27,8 @@ jobs:
       name: dotnet installer
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-    # - name: set-env (workflow_dispatch)
-    #   if: github.event_name == 'workflow_dispatch'
-    #   run: |
-    #     echo "::set-env name=subscription::${{ github.event.inputs.subscription }}"
-    #     echo "::set-env name=location::${{ github.event.inputs.location }}"
-    #     echo "::set-env name=environment::${{ github.event.inputs.environment }}"
-    # - name: set-env (default)
-    #   if: github.event_name != 'workflow_dispatch'
-    #   run: |
-    #     echo "::set-env name=subscription::reset-obywatelski"
-    #     echo "::set-env name=location::germanywestcentral"
-    #     echo "::set-env name=environment::dev"
     - run: dotnet tool restore
-      name: dotnet tool restore restore
+      name: dotnet tool restore
       working-directory: ./main
     - run: dotnet nuke Compile
       name: dotnet nuke Compile
