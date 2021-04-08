@@ -28,7 +28,7 @@ jobs:
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
     - id: nuke
-      uses: cloud-tek/actions/nuke@v0.1
+      uses: cloud-tek/actions/nuke@v0.2
       name: nuke
       with:
         directory: ${{ github.workspace }}/main
