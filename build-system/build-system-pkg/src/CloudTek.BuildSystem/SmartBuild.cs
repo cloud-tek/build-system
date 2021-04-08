@@ -41,9 +41,9 @@ namespace CloudTek.BuildSystem
             set => buildNumber = value.Replace(".", string.Empty);
         }
 
-        [Parameter(nameof(NuGetApiUrl))]
+        [Parameter("nuget-api-url")]
         public string NuGetApiUrl { get; set; }
-        [Parameter(nameof(NuGetApiKey))]
+        [Parameter("nuget-api-key")]
         public string NuGetApiKey { get; set; }
 
         //[Solution] readonly Solution Solution;
