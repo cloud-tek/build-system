@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudTek.BuildSystem", "build-system\build-system-pkg\src\CloudTek.BuildSystem\CloudTek.BuildSystem.csproj", "{EAB97155-6C78-47E6-B9AE-038F424B1524}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "build", "build\build.csproj", "{17626DBA-F090-41FD-9D89-96F3C8AC8D3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17626DBA-F090-41FD-9D89-96F3C8AC8D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17626DBA-F090-41FD-9D89-96F3C8AC8D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB97155-6C78-47E6-B9AE-038F424B1524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB97155-6C78-47E6-B9AE-038F424B1524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB97155-6C78-47E6-B9AE-038F424B1524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB97155-6C78-47E6-B9AE-038F424B1524}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE5CEF46-73AC-41B6-A3DC-5457F78F9FAA}
+	EndGlobalSection
+EndGlobal

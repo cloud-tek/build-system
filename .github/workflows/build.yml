@@ -1,0 +1,59 @@
+name: build build-system
+
+env:
+  NETCORE_VERSION: 5.0.101
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+      - ".github/workflows/build.yml"
+      - "build-system/*"
+  workflow_dispatch:
+    inputs: {}
+      # subscription:
+      #   description: 'Azure subscription'
+      #   required: false
+      #   default: 'reset-obywatelski'
+      # environment:
+      #   description: 'Environment'
+      #   required: true
+      #   default: 'dev'
+      # location:
+      #   description: 'Azure region'
+      #   required: false
+      #   default: 'germanywestcentral'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout build-system
+      uses: actions/checkout@v2
+      with:
+        path: main
+    - uses: actions/setup-dotnet@v1
+      name: dotnet installer
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+    # - name: set-env (workflow_dispatch)
+    #   if: github.event_name == 'workflow_dispatch'
+    #   run: |
+    #     echo "::set-env name=subscription::${{ github.event.inputs.subscription }}"
+    #     echo "::set-env name=location::${{ github.event.inputs.location }}"
+    #     echo "::set-env name=environment::${{ github.event.inputs.environment }}"
+    # - name: set-env (default)
+    #   if: github.event_name != 'workflow_dispatch'
+    #   run: |
+    #     echo "::set-env name=subscription::reset-obywatelski"
+    #     echo "::set-env name=location::germanywestcentral"
+    #     echo "::set-env name=environment::dev"
+    - run: dotnet tool restore
+      name: dotnet tool restore restore
+      working-directory: ./main
+    - run: dotnet nuke Compile
+      name: dotnet nuke Compile
+      working-directory: ./main
