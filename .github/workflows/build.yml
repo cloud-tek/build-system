@@ -23,8 +23,9 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
+    # note: actions/checkout@v2 uses shallow cloning, gitver requires full clone
     - name: Checkout build-system
-      uses: actions/checkout@v2
+      uses: actions/checkout@v1
       with:
         path: main
     - uses: actions/setup-dotnet@v1
