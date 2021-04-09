@@ -138,7 +138,7 @@ namespace CloudTek.BuildSystem
                     m.Artifacts.Where(a => a.Type == ArtifactType.Package).ForEach(artifact =>
                     {
                         DotNetNuGetPush(s => s
-                            .SetTargetPath(ArtifactsDirectory / artifact.Name)
+                            .SetTargetPath(ArtifactsDirectory / artifact.Name / $"{artifact.Project}.{GitVersion.NuGetVersionV2}.nupkg")
                             .SetSource(NuGetApiUrl)
                             .SetApiKey(NuGetApiKey)
                         );
