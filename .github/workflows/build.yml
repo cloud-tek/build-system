@@ -43,6 +43,7 @@ jobs:
         NuGetApiKey:  '${{ secrets.GH_PAT }}'
     - name: diag
       shell: bash
+      if: always()
       working-directory: ${{ github.workspace }}
       run: |
        apt update && apt install tree --yes
