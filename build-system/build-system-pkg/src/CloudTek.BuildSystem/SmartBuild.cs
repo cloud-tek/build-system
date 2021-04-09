@@ -141,6 +141,7 @@ namespace CloudTek.BuildSystem
                             .SetTargetPath(ArtifactsDirectory / artifact.Name / $"{artifact.Project}.{GitVersion.NuGetVersionV2}.nupkg")
                             .SetSource(NuGetApiUrl)
                             .SetApiKey(NuGetApiKey)
+                            .SetSkipDuplicate(true)
                         );
                     });
                 });
