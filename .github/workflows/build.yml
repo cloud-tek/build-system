@@ -56,6 +56,12 @@ jobs:
       with:
         directory: ${{ github.workspace }}
         Compile:      'true'
+    - name: gitversion
+      shell: bash
+      if: always()
+      working-directory: ${{ github.workspace }}
+      run: |
+       dotnet gitversion
     - name: diag
       shell: bash
       if: always()
