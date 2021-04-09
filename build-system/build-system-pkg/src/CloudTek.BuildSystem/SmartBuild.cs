@@ -127,10 +127,12 @@ namespace CloudTek.BuildSystem
             });
 
         protected Target Push => _ => _
-            .Requires(() => NuGetApiUrl)
-            .Requires(() => NuGetApiKey)
+            //.Requires(() => NuGetApiUrl)
+            //.Requires(() => NuGetApiKey)
             .Executes(() =>
             {
+                Logger.Info($"pushing to: {NuGetApiUrl} / {NuGetApiKey}");
+
                 Modules.ForEach(m =>
                 {
                     m.Artifacts.Where(a => a.Type == ArtifactType.Package).ForEach(artifact =>
