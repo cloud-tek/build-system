@@ -38,10 +38,10 @@ jobs:
       name: dotnet installer
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-    - id: nuke
+    - id: buld-system
       if: github.event_name != 'pull_request'
       uses: cloud-tek/actions/build-system@v0.6
-      name: nuke
+      name: build-system
       with:
         directory: ${{ github.workspace }}
         Compile:      'true'
@@ -49,10 +49,10 @@ jobs:
         Push:         'true'
         NuGetApiUrl:  'https://nuget.pkg.github.com/cloud-tek/index.json'
         NuGetApiKey:  '${{ secrets.GH_PAT }}'
-    - id: nuke
+    - id: buld-system-pr
       if: github.event_name == 'pull_request'
       uses: cloud-tek/actions/build-system@v0.6
-      name: nuke
+      name: build-system (pr)
       with:
         directory: ${{ github.workspace }}
         Compile:      'true'
