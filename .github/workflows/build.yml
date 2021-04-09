@@ -5,13 +5,22 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 on:
+  pull_request:
+    branches:
+      - main
+      - release/*
+    paths:
+      - ".github/workflows/build.reset-web.yml"
+      - "reset-obywatelski/*"
   push:
     branches:
     - main
+    - feature/*
+    - release/*
     paths:
       - ".github/workflows/build.yml"
-      - "build/*"
-      - "build-system/*"
+      - "build/**"
+      - "build-system/**"
   workflow_dispatch:
     inputs: {}
 
@@ -29,15 +38,27 @@ jobs:
       name: dotnet installer
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
-    - id: nuke
-      uses: cloud-tek/actions/build-system@v0.5
-      name: nuke
+    - id: buld-system
+      if: github.event_name != 'pull_request'
+      uses: cloud-tek/actions/build-system@v0.6
+      name: build-system
       with:
         directory: ${{ github.workspace }}
-        Compile:  'true'
-        Pack:     'true'
+        Compile:      'true'
+        Pack:         'true'
+        Push:         'true'
+        NuGetApiUrl:  'https://nuget.pkg.github.com/cloud-tek/index.json'
+        NuGetApiKey:  '${{ secrets.GH_PAT }}'
+    - id: buld-system-pr
+      if: github.event_name == 'pull_request'
+      uses: cloud-tek/actions/build-system@v0.6
+      name: build-system (pr)
+      with:
+        directory: ${{ github.workspace }}
+        Compile:      'true'
     - name: diag
       shell: bash
+      if: always()
       working-directory: ${{ github.workspace }}
       run: |
        apt update && apt install tree --yes

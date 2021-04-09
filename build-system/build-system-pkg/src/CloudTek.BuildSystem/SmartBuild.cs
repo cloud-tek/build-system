@@ -41,6 +41,11 @@ namespace CloudTek.BuildSystem
             set => buildNumber = value.Replace(".", string.Empty);
         }
 
+        [Parameter("nuget-api-url")]
+        public string NuGetApiUrl { get; set; }
+        [Parameter("nuget-api-key")]
+        public string NuGetApiKey { get; set; }
+
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
         public abstract GitVersion GitVersion { get; set; }
@@ -117,6 +122,27 @@ namespace CloudTek.BuildSystem
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutputDirectory(ArtifactsDirectory / artifact.Name)
                           .EnableNoBuild());
+                    });
+                });
+            });
+
+        protected Target Push => _ => _
+            //.Requires(() => NuGetApiUrl)
+            //.Requires(() => NuGetApiKey)
+            .Executes(() =>
+            {
+                Logger.Info($"pushing to: {NuGetApiUrl} / {NuGetApiKey}");
+
+                Modules.ForEach(m =>
+                {
+                    m.Artifacts.Where(a => a.Type == ArtifactType.Package).ForEach(artifact =>
+                    {
+                        DotNetNuGetPush(s => s
+                            .SetTargetPath(ArtifactsDirectory / artifact.Name / $"{artifact.Project}.{GitVersion.NuGetVersionV2}.nupkg")
+                            .SetSource(NuGetApiUrl)
+                            .SetApiKey(NuGetApiKey)
+                            .SetSkipDuplicate(true)
+                        );
                     });
                 });
             });
