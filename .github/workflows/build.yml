@@ -39,7 +39,7 @@ jobs:
         Compile:      'true'
         Pack:         'true'
         Push:         'true'
-        NuGetApiUrl:  'nuget.pkg.github.com'
+        NuGetApiUrl:  'nuget.pkg.github.com/cloud-tek/index.json'
         NuGetApiKey:  '${{ secrets.GH_PAT }}'
     - name: diag
       shell: bash
