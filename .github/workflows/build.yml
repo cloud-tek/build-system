@@ -26,15 +26,41 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-    # note: actions/checkout@v2 uses shallow cloning, gitver requires full clone
-    - name: Checkout build-system
-      uses: actions/checkout@v1
-      # with:
-      #   path: main
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: dotnet tool restore
+      run: dotnet tool restore
+      shell: bash
     - uses: actions/setup-dotnet@v1
       name: dotnet installer
       with:
         dotnet-version: ${{ env.NETCORE_VERSION }}
+    - name: check pull_request.head.ref
+      if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged }}
+      run: |
+        BRANCH="${{ github.event.pull_request.head.ref }}"
+        if [[ $BRANCH =~ (release\/)([0-9]+\.[0-9]+)(\.[0-9]+)? ]]
+        then
+          echo "::set-env name=version::${BASH_REMATCH[2]}"
+        fi
+      shell: bash
+    - name: tag (pull_request.head.ref)
+      if: ${{ env.version != null }}
+      uses: anothrNick/github-tag-action@1.26.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: false
+        RELEASE_BRANCHES: master
+        INITIAL_VERSION: 0.1.0
+        CUSTOM_TAG: ${{ env.version }}
+        VERBOSE: true
+    - name: gitversion
+      shell: bash
+      if: always()
+      working-directory: ${{ github.workspace }}
+      run: |
+       dotnet gitversion
     - id: buld-system
       if: github.event_name != 'pull_request'
       uses: cloud-tek/actions/build-system@v0.6
