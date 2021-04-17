@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RepositoryUrl>https://github.com/cloud-tek/build-system</RepositoryUrl>
+    <PackageIconUrl>https://avatars.githubusercontent.com/u/35167581</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
