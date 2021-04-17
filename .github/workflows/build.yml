@@ -64,7 +64,7 @@ jobs:
       run: |
        dotnet gitversion
     - id: buld-system
-      if: github.event_name != 'pull_request'
+      if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed') }}
       uses: cloud-tek/actions/build-system@v0.6
       name: build-system
       with:
@@ -75,7 +75,7 @@ jobs:
         NuGetApiUrl:  'https://nuget.pkg.github.com/cloud-tek/index.json'
         NuGetApiKey:  '${{ secrets.GH_PAT }}'
     - id: buld-system-pr
-      if: github.event_name == 'pull_request'
+      if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
       uses: cloud-tek/actions/build-system@v0.6
       name: build-system (pr)
       with:
