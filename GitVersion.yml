@@ -32,11 +32,9 @@ branches:
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
     regex: ^master$|^main$
-    source-branches:
-    - develop
-    - release
+    source-branches: []
     tracks-release-branches: false
-    is-release-branch: false
+    is-release-branch: true
     is-mainline: true
     pre-release-weight: 55000
   release:
@@ -47,10 +45,7 @@ branches:
     track-merge-target: false
     regex: ^release?[/-]
     source-branches:
-    - develop
     - main
-    - support
-    - release
     tracks-release-branches: false
     is-release-branch: true
     is-mainline: false
@@ -63,12 +58,7 @@ branches:
     track-merge-target: false
     regex: ^feature?[/-]
     source-branches:
-    - develop
     - main
-    - release
-    - feature
-    - support
-    - hotfix
     tracks-release-branches: false
     is-release-branch: false
     is-mainline: false
