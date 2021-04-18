@@ -25,7 +25,4 @@ public class Build : SmartBuild
             }
         }
     };
-
-[GitVersion(Framework = "net5.0", NoFetch = true)]
-[Required] public override GitVersion GitVersion { get; set; }
 }

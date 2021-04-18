@@ -48,7 +48,8 @@ namespace CloudTek.BuildSystem
 
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
-        public abstract GitVersion GitVersion { get; set; }
+        [GitVersion(Framework = "net5.0", NoFetch = true)]
+        [Required]public GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
         protected AbsolutePath TestResultsDirectory => RootDirectory / "tests/results";
@@ -127,8 +128,8 @@ namespace CloudTek.BuildSystem
             });
 
         protected Target Push => _ => _
-            //.Requires(() => NuGetApiUrl)
-            //.Requires(() => NuGetApiKey)
+            .Requires(() => NuGetApiUrl)
+            .Requires(() => NuGetApiKey)
             .Executes(() =>
             {
                 Logger.Info($"pushing to: {NuGetApiUrl} / {NuGetApiKey}");
