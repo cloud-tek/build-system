@@ -180,7 +180,7 @@ namespace CloudTek.BuildSystem
               .SetFilter($"Category={category}")
               .SetLogger($"trx;LogFileName={artifact.Project}.{category}.trx")
               .SetConfiguration(Configuration)
-              .SetResultsDirectory(TestResultsDirectory / artifact.Name)
+              .SetResultsDirectory(TestResultsDirectory)
               .When(Constants.TestCategories.CodeCoverageCategories.Contains(category), x =>
                 x.SetProcessArgumentConfigurator(args =>
                   args
