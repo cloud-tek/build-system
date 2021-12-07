@@ -3,7 +3,7 @@ name: build build-system
 env:
   NETCORE_VERSION: 6.0.100
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
+  DOTNET_ROLL_FORWARD: Major
 on:
   pull_request:
     types:
