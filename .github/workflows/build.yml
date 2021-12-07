@@ -1,7 +1,7 @@
 name: build build-system
 
 env:
-  NETCORE_VERSION: 5.0.101
+  NETCORE_VERSION: 6.0.100
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 on:
