@@ -50,7 +50,7 @@ namespace CloudTek.BuildSystem
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
         [GitVersion(Framework = "net6.0", NoFetch = true)]
-        [Required]public GitVersion GitVersion { get; set; }
+        public GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
         protected AbsolutePath TestResultsDirectory => RootDirectory / "tests/results";
