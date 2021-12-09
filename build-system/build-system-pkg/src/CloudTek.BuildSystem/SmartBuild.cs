@@ -4,6 +4,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
+using System.IO;
 using System.Linq;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -20,14 +21,14 @@ namespace CloudTek.BuildSystem
             Modules = modules;
 
             var modulesWithExistingTests = Modules
-              .Where(m => m.Artifacts.Any(a => FileExists(a.GetTestProjectPath(m, RootDirectory))))
+              .Where(m => m.Artifacts.Any(a => File.Exists(a.GetTestProjectPath(m, RootDirectory))))
               .OrderBy(x => x.Name);
 
 
             var finalModuleWithTests = modulesWithExistingTests.LastOrDefault();
 
             finalArtifactWithTests =
-              finalModuleWithTests?.Artifacts.Last(a => FileExists(a.GetTestProjectPath(finalModuleWithTests, RootDirectory)));
+              finalModuleWithTests?.Artifacts.Last(a => File.Exists(a.GetTestProjectPath(finalModuleWithTests, RootDirectory)));
         }
 
         [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -49,7 +50,7 @@ namespace CloudTek.BuildSystem
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
         [GitVersion(Framework = "net5.0", NoFetch = true)]
-        [Required]public GitVersion GitVersion { get; set; }
+        public GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
         protected AbsolutePath TestResultsDirectory => RootDirectory / "tests/results";
@@ -75,7 +76,8 @@ namespace CloudTek.BuildSystem
                         Logger.Trace($"Restoring {artifact.Name}");
                         DotNetRestore(s => s
                           .SetProjectFile((RootDirectory /
-                            $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj")));
+                            $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj"))
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
 
                 });
@@ -99,7 +101,7 @@ namespace CloudTek.BuildSystem
                           .SetVersion(GitVersion.NuGetVersionV2)
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                          .EnableNoRestore());
+                          .EnableNoRestore().SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -122,7 +124,8 @@ namespace CloudTek.BuildSystem
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutputDirectory(ArtifactsDirectory / artifact.Name)
-                          .EnableNoBuild());
+                          .EnableNoBuild()
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -143,6 +146,7 @@ namespace CloudTek.BuildSystem
                             .SetSource(NuGetApiUrl)
                             .SetApiKey(NuGetApiKey)
                             .SetSkipDuplicate(true)
+                            .SetProcessToolPath(DotNetTasks.DotNetPath)
                         );
                     });
                 });
@@ -167,7 +171,8 @@ namespace CloudTek.BuildSystem
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutput(ArtifactsDirectory / artifact.Name)
-                          .EnableNoBuild());
+                          .EnableNoBuild()
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -178,9 +183,10 @@ namespace CloudTek.BuildSystem
             return settings
               .SetProjectFile(artifact.GetTestProjectPath(module, RootDirectory))
               .SetFilter($"Category={category}")
-              .SetLogger($"trx;LogFileName={artifact.Project}.{category}.trx")
+              .SetLoggers($"trx;LogFileName={artifact.Project}.{category}.trx")
               .SetConfiguration(Configuration)
               .SetResultsDirectory(TestResultsDirectory)
+              .SetProcessToolPath(DotNetTasks.DotNetPath)
               .When(Constants.TestCategories.CodeCoverageCategories.Contains(category), x =>
                 x.SetProcessArgumentConfigurator(args =>
                   args
@@ -200,7 +206,7 @@ namespace CloudTek.BuildSystem
                 {
                     m.Artifacts.ForEach(artifact =>
                     {
-                        if (FileExists(artifact.GetTestProjectPath(m, RootDirectory)))
+                        if (File.Exists(artifact.GetTestProjectPath(m, RootDirectory)))
                         {
                             DotNetTest(s => ConfigureTestSettings(s, m, artifact, Constants.TestCategories.UnitTests,
                          m.Equals(Modules.Last()) && artifact.Equals(finalArtifactWithTests)));
@@ -217,7 +223,7 @@ namespace CloudTek.BuildSystem
                 {
                     m.Artifacts.ForEach(artifact =>
                     {
-                        if (FileExists(artifact.GetTestProjectPath(m, RootDirectory)))
+                        if (File.Exists(artifact.GetTestProjectPath(m, RootDirectory)))
                         {
                             DotNetTest(s => ConfigureTestSettings(s, m, artifact, Constants.TestCategories.IntegrationTests,
                           m.Equals(Modules.Last()) && artifact.Equals(finalArtifactWithTests)));
@@ -234,7 +240,7 @@ namespace CloudTek.BuildSystem
                 {
                     m.Artifacts.ForEach(artifact =>
                     {
-                        if (FileExists(artifact.GetTestProjectPath(m, RootDirectory)))
+                        if (File.Exists(artifact.GetTestProjectPath(m, RootDirectory)))
                         {
                             DotNetTest(s => ConfigureTestSettings(s, m, artifact, Constants.TestCategories.ModuleTests));
                         }
@@ -250,7 +256,7 @@ namespace CloudTek.BuildSystem
                 {
                     m.Artifacts.ForEach(artifact =>
                     {
-                        if (FileExists(artifact.GetTestProjectPath(m, RootDirectory)))
+                        if (File.Exists(artifact.GetTestProjectPath(m, RootDirectory)))
                         {
                             DotNetTest(s => ConfigureTestSettings(s, m, artifact, Constants.TestCategories.SystemTests));
                         }
@@ -266,7 +272,7 @@ namespace CloudTek.BuildSystem
                 {
                     m.Artifacts.ForEach(artifact =>
                     {
-                        if (FileExists(artifact.GetTestProjectPath(m, RootDirectory)))
+                        if (File.Exists(artifact.GetTestProjectPath(m, RootDirectory)))
                         {
                             DotNetTest(s => ConfigureTestSettings(s, m, artifact, Constants.TestCategories.SmokeTests));
                         }
