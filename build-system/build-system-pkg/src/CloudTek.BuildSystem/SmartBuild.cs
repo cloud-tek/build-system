@@ -49,7 +49,7 @@ namespace CloudTek.BuildSystem
 
         //[Solution] readonly Solution Solution;
         //[GitRepository] readonly GitRepository GitRepository;
-        [GitVersion(Framework = "net6.0", NoFetch = true)]
+        [GitVersion(Framework = "net5.0", NoFetch = true)]
         public GitVersion GitVersion { get; set; }
 
         protected AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -76,7 +76,8 @@ namespace CloudTek.BuildSystem
                         Logger.Trace($"Restoring {artifact.Name}");
                         DotNetRestore(s => s
                           .SetProjectFile((RootDirectory /
-                            $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj")));
+                            $"{m.Name}/{artifact.Name}/src/{artifact.Project}/{artifact.Project}.csproj"))
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
 
                 });
@@ -100,7 +101,7 @@ namespace CloudTek.BuildSystem
                           .SetVersion(GitVersion.NuGetVersionV2)
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
-                          .EnableNoRestore());
+                          .EnableNoRestore().SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -123,7 +124,8 @@ namespace CloudTek.BuildSystem
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutputDirectory(ArtifactsDirectory / artifact.Name)
-                          .EnableNoBuild());
+                          .EnableNoBuild()
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -144,6 +146,7 @@ namespace CloudTek.BuildSystem
                             .SetSource(NuGetApiUrl)
                             .SetApiKey(NuGetApiKey)
                             .SetSkipDuplicate(true)
+                            .SetProcessToolPath(DotNetTasks.DotNetPath)
                         );
                     });
                 });
@@ -168,7 +171,8 @@ namespace CloudTek.BuildSystem
                           .SetFileVersion(GitVersion.AssemblySemFileVer)
                           .SetAssemblyVersion(GitVersion.AssemblySemVer)
                           .SetOutput(ArtifactsDirectory / artifact.Name)
-                          .EnableNoBuild());
+                          .EnableNoBuild()
+                          .SetProcessToolPath(DotNetTasks.DotNetPath));
                     });
                 });
             });
@@ -182,6 +186,7 @@ namespace CloudTek.BuildSystem
               .SetLoggers($"trx;LogFileName={artifact.Project}.{category}.trx")
               .SetConfiguration(Configuration)
               .SetResultsDirectory(TestResultsDirectory)
+              .SetProcessToolPath(DotNetTasks.DotNetPath)
               .When(Constants.TestCategories.CodeCoverageCategories.Contains(category), x =>
                 x.SetProcessArgumentConfigurator(args =>
                   args
